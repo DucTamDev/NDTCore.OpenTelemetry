@@ -1,0 +1,7 @@
+networks:
+  elk:
+    driver: bridge
+  otel:
+    driver: bridge
+  shared:
+    driver: bridge

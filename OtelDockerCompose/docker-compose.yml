@@ -1,0 +1,102 @@
+include:
+  - src/network/networks.yml
+  - src/elk/docker-compose-elk.yml
+  - src/jaeger/docker-compose-jaeger-v1.yml
+  - src/kafka/docker-compose-kafka.yml
+
+services:
+  # Otel Collector
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:latest
+    hostname: otel-collector
+    container_name: otel-collector
+    ports:
+      - "1888:1888"         # pprof extension
+      - "8888:8888"         # Prometheus metrics exposed by the collector
+      - "8889:8889"         # Prometheus exporter metrics
+      - "13133:13133"       # health_check extension
+      - "4317:4317"         # OTLP gRPC receiver
+      # - "4318:4318"       # OTLP http receiver
+      - "55679:55679"       # zpages extension
+    command:
+      [
+        "--config=/etc/otelcol-config.yml",
+        "--config=/etc/otelcol-observability.yml",
+        "--config=/etc/otelcol-config-extras.yml",
+      ]
+    volumes:
+      - ./src/otelcollector/otelcol-config.yaml:/etc/otelcol-config.yml
+      - ./src/otelcollector/otelcol-observability.yaml:/etc/otelcol-observability.yml
+      - ./src/otelcollector/otelcol-config-extras.yaml:/etc/otelcol-config-extras.yml
+    deploy:
+      resources:
+        limits:
+          memory: 125M
+    depends_on:
+      - zookeeper
+      - kafka
+    networks:
+      - elk
+    restart: always
+
+  # Prometheus
+  prometheus:
+    image: prom/prometheus:latest
+    hostname: prometheus
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - prometheus_data:/prometheus
+      - ./src/prometheus/prometheus-config.yaml:/etc/prometheus/prometheus.yml
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+    deploy:
+      resources:
+        limits:
+          memory: 300M
+    networks:
+      - elk
+    restart: always
+
+  # Using Grphana to monitor Jaeger services
+  grafana:
+    image: grafana/grafana:latest
+    hostname: grafana
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./src/grafana/grafana.ini:/etc/grafana/grafana.ini
+      - ./src/grafana/provisioning/:/etc/grafana/provisioning/
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_AUTH_DISABLE_LOGIN_FORM=true
+    depends_on:
+      - prometheus
+      - loki
+    networks:
+      - elk
+    restart: always
+
+  #Grafana/Loki
+  loki:
+    image: grafana/loki:latest
+    hostname: loki
+    container_name: loki
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./src/grafana/loki/loki-config.yaml:/etc/loki/loki-config.yaml
+    command:
+      - "--config.file=/etc/loki/loki-config.yaml"
+    networks:
+      - elk
+    restart: always
+
+volumes:
+  grafana_data:
+  loki_data:
+  prometheus_data:

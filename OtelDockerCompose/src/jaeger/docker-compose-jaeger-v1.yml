@@ -1,0 +1,82 @@
+services:
+  jaeger-collector:
+    image: jaegertracing/jaeger-collector
+    hostname: jaeger-collector
+    container_name: jaeger-collector
+    command:
+      - "--collector.otlp.enabled=true"
+      - "--log-level=debug"
+    ports:
+      - 62096:4317 # 4317 gRPC Accepts traces in OpenTelemetry OTLP format (Protobuf).
+      - 4318:4318 # 4318 http Accepts traces in OpenTelemetry OTLP format (Protobuf and JSON).
+      - 14268:14268
+      - 14250:14250 # 14250 gRPC Used by jaeger-agent to send spans
+      - 14269:14269
+    restart: always
+    environment:
+      - SPAN_STORAGE_TYPE=kafka
+      - KAFKA_PRODUCER_BROKERS=kafka:29092
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "wget --no-verbose --tries=1 --spider http://localhost:14269/ || exit 1",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+    networks:
+      - elk
+
+  jaeger-ingester:
+    image: jaegertracing/jaeger-ingester
+    hostname: jaeger-ingester
+    container_name: jaeger-ingester
+    restart: always
+    environment:
+      - SPAN_STORAGE_TYPE=elasticsearch
+      - ES_SERVER_URLS=http://elasticsearch:9200
+      - ES_USERNAME=elastic
+      - ES_PASSWORD=changeme
+      - KAFKA_CONSUMER_BROKERS=kafka:29092
+      - KAFKA_TOPIC=jaeger-spans
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "wget --no-verbose --tries=1 --spider http://localhost:14270/ || exit 1",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+    networks:
+      - elk
+    depends_on:
+      jaeger-collector:
+        condition: service_healthy
+
+  jaeger-query:
+    image: jaegertracing/jaeger-query:latest
+    container_name: jaeger-query
+    environment:
+      - SPAN_STORAGE_TYPE=elasticsearch
+      - ES_SERVER_URLS=http://elasticsearch:9200
+      - ES_USERNAME=elastic
+      - ES_PASSWORD=changeme
+    ports:
+      - "16686:16686"
+      - "16687"
+    restart: always
+    command:
+      - "--query.base-path=/jaeger/ui"
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "wget --no-verbose --tries=1 --spider http://localhost:16687/ || exit 1",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+    networks:
+      - elk

@@ -1,0 +1,41 @@
+global:
+  scrape_interval:     30s # By default, scrape targets every 30 seconds.
+  evaluation_interval: 30s # By default, scrape targets every 30 seconds.
+  # scrape_timeout is set to the global default (10s).
+
+# Let's scrape every Jaeger service:
+scrape_configs:
+  - job_name: 'otel-collector'
+    scrape_interval: 5s
+    static_configs: 
+      - targets: ['otel-collector:8888', 'otel-collector:8889']
+        labels:
+          group: 'otel'
+
+  - job_name: 'jaeger-agent'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['jaeger-agent:5778']
+        labels:
+          group: 'jaeger'
+
+  - job_name: 'jaeger-ingester'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['jaeger-ingester:14271']
+        labels:
+          group: 'jaeger'
+
+  - job_name: 'jaeger-collector'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['jaeger-collector:14268']
+        labels:
+          group: 'jaeger'
+
+  - job_name: 'jaeger-query'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['jaeger-query:16686']
+        labels:
+          group: 'jaeger'

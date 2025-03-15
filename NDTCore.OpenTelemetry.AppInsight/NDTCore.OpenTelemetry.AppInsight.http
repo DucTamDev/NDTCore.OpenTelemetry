@@ -1,0 +1,6 @@
+@NDTCore.OpenTelemetry.AppInsight_HostAddress = http://localhost:5062
+
+GET {{NDTCore.OpenTelemetry.AppInsight_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

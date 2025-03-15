@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35312.102
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NDTCore.OpenTelemetry.AppInsight", "NDTCore.OpenTelemetry.AppInsight\NDTCore.OpenTelemetry.AppInsight.csproj", "{708FDAD3-2E50-47DE-B96F-9245478E4D80}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NDTCore.OpenTelemetry.Domain", "NDTCore.OpenTelemetry.Domain\NDTCore.OpenTelemetry.Domain.csproj", "{039BC33A-3644-46B3-9C14-761D4EB6721F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NDTCore.OpenTelemetry.Application", "NDTCore.OpenTelemetry.Application\NDTCore.OpenTelemetry.Application.csproj", "{CCABA548-8391-4554-8269-D8B7E95E533A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NDTCore.OpenTelemetry.Infrastructure", "NDTCore.OpenTelemetry.Infrastructure\NDTCore.OpenTelemetry.Infrastructure.csproj", "{74ED34A7-EBA8-45F2-9776-FE3E0A35956F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NDTCore.OpenTelemetry.Contact", "NDTCore.OpenTelemetry.Contact\NDTCore.OpenTelemetry.Contact.csproj", "{4D4F0D1A-0F75-48AF-B531-32D5940429FF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NDTCore.OpenTelemetry.Product", "NDTCore.OpenTelemetry.Product\NDTCore.OpenTelemetry.Product.csproj", "{8BB97431-23D9-4660-91EC-EFD8EBD43741}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{708FDAD3-2E50-47DE-B96F-9245478E4D80}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{708FDAD3-2E50-47DE-B96F-9245478E4D80}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{708FDAD3-2E50-47DE-B96F-9245478E4D80}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{708FDAD3-2E50-47DE-B96F-9245478E4D80}.Release|Any CPU.Build.0 = Release|Any CPU
+		{039BC33A-3644-46B3-9C14-761D4EB6721F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{039BC33A-3644-46B3-9C14-761D4EB6721F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{039BC33A-3644-46B3-9C14-761D4EB6721F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{039BC33A-3644-46B3-9C14-761D4EB6721F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCABA548-8391-4554-8269-D8B7E95E533A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCABA548-8391-4554-8269-D8B7E95E533A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCABA548-8391-4554-8269-D8B7E95E533A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCABA548-8391-4554-8269-D8B7E95E533A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74ED34A7-EBA8-45F2-9776-FE3E0A35956F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74ED34A7-EBA8-45F2-9776-FE3E0A35956F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74ED34A7-EBA8-45F2-9776-FE3E0A35956F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74ED34A7-EBA8-45F2-9776-FE3E0A35956F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4D4F0D1A-0F75-48AF-B531-32D5940429FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D4F0D1A-0F75-48AF-B531-32D5940429FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D4F0D1A-0F75-48AF-B531-32D5940429FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D4F0D1A-0F75-48AF-B531-32D5940429FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8BB97431-23D9-4660-91EC-EFD8EBD43741}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8BB97431-23D9-4660-91EC-EFD8EBD43741}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8BB97431-23D9-4660-91EC-EFD8EBD43741}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8BB97431-23D9-4660-91EC-EFD8EBD43741}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8FE8BF47-B052-4DEB-B1AC-8FC552290870}
+	EndGlobalSection
+EndGlobal

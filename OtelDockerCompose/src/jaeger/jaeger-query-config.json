@@ -1,0 +1,22 @@
+{
+    "dependencies": {
+      "dagMaxNumServices": 200,
+      "menuEnabled": true
+    },
+    "archiveEnabled": true,
+    "menu": [
+      {
+        "label": "Custom menu",
+        "items": [
+          {
+            "label": "My custom item 1",
+            "url": "https://github.com/jaegertracing/jaeger"
+          },
+          {
+            "label": "My custom item 2",
+            "url": "http://jaeger.readthedocs.io/en/latest/"
+          }
+        ]
+      }
+    ]
+  }
