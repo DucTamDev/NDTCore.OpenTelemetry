@@ -112,6 +112,5 @@ volumes:
   elasticsearch:
 
 include:
-  - ../network/networks.yml
   - ./extensions/fleet/fleet-compose.yml
   - ./extensions/fleet/agent-apmserver-compose.yml

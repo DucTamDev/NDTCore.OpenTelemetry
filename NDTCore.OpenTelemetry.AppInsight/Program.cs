@@ -1,15 +1,11 @@
 using NDTCore.OpenTelemetry.Application;
 using NDTCore.OpenTelemetry.Infrastructure;
-using OpenTelemetry.Logs;
-using OpenTelemetry.Metrics;
-using OpenTelemetry.Resources;
-using OpenTelemetry.Trace;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddApplicationConfigureServices(builder.Configuration);
-builder.Services.AddInfrastructureConfigureServices(builder.Configuration);
+builder.Services.AddApplicationConfigureServicesForAppInsight(builder.Configuration);
+builder.Services.AddInfrastructureConfigureServicesForAppInsight(builder.Configuration);
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -31,4 +27,4 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.Run();
+await app.RunAsync();

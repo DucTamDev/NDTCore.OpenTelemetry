@@ -16,7 +16,7 @@ services:
       - "8889:8889"         # Prometheus exporter metrics
       - "13133:13133"       # health_check extension
       - "4317:4317"         # OTLP gRPC receiver
-      # - "4318:4318"       # OTLP http receiver
+      # - "4318:4318"         # OTLP http receiver
       - "55679:55679"       # zpages extension
     command:
       [
@@ -47,7 +47,7 @@ services:
     ports:
       - "9090:9090"
     volumes:
-      - prometheus_data:/prometheus
+      - prometheus:/prometheus
       - ./src/prometheus/prometheus-config.yaml:/etc/prometheus/prometheus.yml
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
@@ -67,7 +67,7 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - grafana_data:/var/lib/grafana
+      - grafana:/var/lib/grafana
       - ./src/grafana/grafana.ini:/etc/grafana/grafana.ini
       - ./src/grafana/provisioning/:/etc/grafana/provisioning/
     environment:
@@ -97,6 +97,6 @@ services:
     restart: always
 
 volumes:
-  grafana_data:
-  loki_data:
-  prometheus_data:
+  grafana:
+  loki:
+  prometheus:

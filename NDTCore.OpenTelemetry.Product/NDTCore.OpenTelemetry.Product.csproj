@@ -1,19 +1,23 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.13">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\NDTCore.OpenTelemetry.Application\NDTCore.OpenTelemetry.Application.csproj" />
-    <ProjectReference Include="..\NDTCore.OpenTelemetry.Contact\NDTCore.OpenTelemetry.Contact.csproj" />
-    <ProjectReference Include="..\NDTCore.OpenTelemetry.Infrastructure\NDTCore.OpenTelemetry.Infrastructure.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\NDTCore.OpenTelemetry.Application\NDTCore.OpenTelemetry.Application.csproj" />
+		<ProjectReference Include="..\NDTCore.OpenTelemetry.Contact\NDTCore.OpenTelemetry.Contact.csproj" />
+		<ProjectReference Include="..\NDTCore.OpenTelemetry.Infrastructure\NDTCore.OpenTelemetry.Infrastructure.csproj" />
+	</ItemGroup>
 
 </Project>
