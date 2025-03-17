@@ -4,13 +4,16 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NDTCore.OpenTelemetry.Contact.Interfaces.ServiceClients.Product;
 using NDTCore.OpenTelemetry.Domain.Constants;
+using NDTCore.OpenTelemetry.Domain.Repositories;
 using NDTCore.OpenTelemetry.Infrastructure.Persistences;
+using NDTCore.OpenTelemetry.Infrastructure.Repositories;
 using NDTCore.OpenTelemetry.Infrastructure.ServiceClients.ProductApi;
 using OpenTelemetry.Exporter;
 using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
+using System.Reflection;
 
 namespace NDTCore.OpenTelemetry.Infrastructure
 {
@@ -18,6 +21,8 @@ namespace NDTCore.OpenTelemetry.Infrastructure
     {
         public static IServiceCollection AddInfrastructureConfigureServicesForAppInsight(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddAutoMapper(Assembly.Load("NDTCore.OpenTelemetry.Contact"));
+
             services.AddStackOpenTelemetry(configuration);
 
             services.AddHttpClient();
@@ -28,8 +33,13 @@ namespace NDTCore.OpenTelemetry.Infrastructure
 
         public static IServiceCollection AddInfrastructureConfigureServicesForProduct(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddAutoMapper(Assembly.Load("NDTCore.OpenTelemetry.Contact"));
+
             services.AddStackOpenTelemetry(configuration);
             services.AddStackDatabase(configuration);
+
+            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            services.AddScoped<IProductRepository, ProductRepository>();
 
             return services;
         }
@@ -89,7 +99,12 @@ namespace NDTCore.OpenTelemetry.Infrastructure
                         .AddSource(OtelConstants.APP_OTEL_RESOURCE_SERVICE_NAME)
                         .AddAspNetCoreInstrumentation()
                         .AddHttpClientInstrumentation()
-                        .AddSqlClientInstrumentation()
+                        .AddSqlClientInstrumentation(options =>
+                        {
+                            options.RecordException = true;
+                            options.SetDbStatementForText = true;
+                            options.SetDbStatementForStoredProcedure = true;
+                        })
                         .AddConsoleExporter()
                         .AddOtlpExporter(options =>
                         {

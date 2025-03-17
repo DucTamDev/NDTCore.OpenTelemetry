@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using NDTCore.OpenTelemetry.Contact.Interfaces.ServiceClients.Product.Dtos;
+using NDTCore.OpenTelemetry.Domain.Repositories;
 
 namespace NDTCore.OpenTelemetry.Product.Controllers
 {
@@ -7,18 +9,32 @@ namespace NDTCore.OpenTelemetry.Product.Controllers
     [Route("api/[controller]")]
     public class ProductController : ControllerBase
     {
-        public ProductController() { }
+        private readonly IMapper _mapper;
+        private readonly IProductRepository _productRepository;
+
+        public ProductController(IMapper mapper, IProductRepository productRepository)
+        {
+            _mapper = mapper;
+            _productRepository = productRepository;
+        }
 
         [HttpGet("all")]
         public async Task<IEnumerable<ProductDto>> GetAllProducts(CancellationToken cancellationToken)
         {
-            var products = new List<ProductDto>
+            var productsTemp = new List<ProductDto>
             {
-                new() { Id = 1, Name = "Product 1" },
-                new() { Id = 2, Name = "Product 2" }
+                new() { Id = 1, Name = "Product temp 1" },
+                new() { Id = 2, Name = "Product temp 2" }
             };
 
-            return await Task.FromResult(products);
+            var products = await _productRepository.GetAllAsync();
+
+            if (products == null || !products.Any())
+            {
+                return productsTemp;
+            }
+
+            return _mapper.Map<List<ProductDto>>(products);
         }
 
         [HttpGet("{id}")]
@@ -29,9 +45,16 @@ namespace NDTCore.OpenTelemetry.Product.Controllers
                 return BadRequest("Invalid product ID.");
             }
 
-            var product = new ProductDto { Id = id, Name = $"Product {id}" };
+            var productsTemp = new ProductDto { Id = id, Name = $"Product temp {id}" };
 
-            return await Task.FromResult(product);
+            var product = await _productRepository.GetByIdAsync(id);
+
+            if (product == null)
+            {
+                return productsTemp;
+            }
+
+            return _mapper.Map<ProductDto>(product);
         }
 
         [HttpPost]

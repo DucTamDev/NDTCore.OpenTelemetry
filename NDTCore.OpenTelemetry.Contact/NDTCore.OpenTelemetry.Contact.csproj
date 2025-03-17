@@ -11,4 +11,8 @@
     <Folder Include="Interfaces\AppServices\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\NDTCore.OpenTelemetry.Domain\NDTCore.OpenTelemetry.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
