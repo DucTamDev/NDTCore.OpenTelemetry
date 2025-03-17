@@ -54,6 +54,8 @@ namespace NDTCore.OpenTelemetry.Infrastructure
         {
             var resource = ResourceBuilder
                             .CreateDefault()
+                            .AddContainerDetector()
+                            .AddHostDetector()
                             .AddService(OtelConstants.APP_OTEL_RESOURCE_SERVICE_NAME,
                                         OtelConstants.APP_OTEL_RESOURCE_SERVICE_NAME,
                                         OtelConstants.APP_OTEL_RESOURCE_SERVICE_VERSION);
@@ -84,6 +86,7 @@ namespace NDTCore.OpenTelemetry.Infrastructure
             services.AddOpenTelemetry()
                     .WithTracing(tracerBuilder => tracerBuilder
                         .SetResourceBuilder(resource)
+                        .AddSource(OtelConstants.APP_OTEL_RESOURCE_SERVICE_NAME)
                         .AddAspNetCoreInstrumentation()
                         .AddHttpClientInstrumentation()
                         .AddSqlClientInstrumentation()
@@ -98,6 +101,7 @@ namespace NDTCore.OpenTelemetry.Infrastructure
             services.AddOpenTelemetry()
                     .WithMetrics(metricBuilder => metricBuilder
                         .SetResourceBuilder(resource)
+                        .AddMeter(OtelConstants.APP_OTEL_RESOURCE_SERVICE_NAME)
                         .AddAspNetCoreInstrumentation()
                         .AddHttpClientInstrumentation()
                         .AddRuntimeInstrumentation()

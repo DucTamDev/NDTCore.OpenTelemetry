@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using NDTCore.OpenTelemetry.Contact.Interfaces.AppServices;
+using NDTCore.OpenTelemetry.Contact.Interfaces.ServiceClients.Product;
 using NDTCore.OpenTelemetry.Contact.Interfaces.ServiceClients.Product.Dtos;
 
 namespace NDTCore.OpenTelemetry.AppInsight.Controllers
@@ -8,17 +8,24 @@ namespace NDTCore.OpenTelemetry.AppInsight.Controllers
     [Route("api/[controller]")]
     public class OtelTraceController : ControllerBase
     {
-        internal IOtelTraceService _otelTraceService;
-        public OtelTraceController(IOtelTraceService otelTraceService)
+        internal IProductApi _productApi;
+        public OtelTraceController(IProductApi productApi)
         {
-            _otelTraceService = otelTraceService;
+            _productApi = productApi;
         }
 
-        [Route("TraceGetAllProduct")]
+        [Route("GetAllProduct")]
         [HttpGet]
-        public async Task<IList<ProductDto>> GetProductAll(int id)
+        public async Task<IList<ProductDto>> GetProductAllAsync()
         {
-            return await _otelTraceService.TraceCallService();
+            return await _productApi.GetAllProductAsync();
+        }
+
+        [Route("GetProductById/{id}")]
+        [HttpGet]
+        public async Task<ProductDto?> GetProductByIdAsync(int id)
+        {
+            return await _productApi.GetProductByIdAsync(id);
         }
     }
 }
