@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using NDTCore.OpenTelemetry.Contact.Interfaces.ServiceClients.Product;
 using NDTCore.OpenTelemetry.Contact.Interfaces.ServiceClients.Product.Dtos;
+using NDTCore.OpenTelemetry.Domain.Constants;
 using System.Diagnostics;
 using System.Text.Json;
 
@@ -13,6 +14,7 @@ namespace NDTCore.OpenTelemetry.Infrastructure.ServiceClients.ProductApi
         private readonly JsonSerializerOptions _options;
 
         private const string _productApiUrl = "https://localhost:44340";
+
         public ProductApi(IHttpClientFactory httpClientFactory, ILogger<ProductApi> logger)
         {
             _logger = logger;
@@ -24,10 +26,10 @@ namespace NDTCore.OpenTelemetry.Infrastructure.ServiceClients.ProductApi
         {
             _logger.LogInformation("[ProductApi] Fetching all products from {Url}", _productApiUrl);
 
-            using (Activity? activity = Activity.Current)
+            using (Activity? activity = OtelConstants.ActivitySource.StartActivity(typeof(ProductApi).FullName ?? nameof(ProductApi)))
             {
-                activity?.SetTag("client.name", "ProductApi");
-                activity?.SetTag("method.name", nameof(GetAllProductAsync));
+                activity?.SetTag("class.name", nameof(ProductApi));
+                activity?.SetTag("class.method", nameof(GetAllProductAsync));
                 activity?.SetTag("request.endpoint", $"{_productApiUrl}/api/product/all");
 
                 activity?.AddBaggage("user.userId", "0012");
@@ -67,10 +69,10 @@ namespace NDTCore.OpenTelemetry.Infrastructure.ServiceClients.ProductApi
         {
             _logger.LogInformation("[ProductApi] Fetching product by ID: {ProductId}", id);
 
-            using (Activity? activity = Activity.Current)
+            using (Activity? activity = OtelConstants.ActivitySource.StartActivity(typeof(ProductApi).FullName ?? nameof(ProductApi)))
             {
-                activity?.SetTag("client.name", "ProductApi");
-                activity?.SetTag("method.name", nameof(GetProductByIdAsync));
+                activity?.SetTag("class.name", nameof(ProductApi));
+                activity?.SetTag("class.method", nameof(GetProductByIdAsync));
                 activity?.SetTag("request.endpoint", $"{_productApiUrl}/api/product/{id}");
                 activity?.AddBaggage("user.userId", "0012");
 
@@ -78,7 +80,7 @@ namespace NDTCore.OpenTelemetry.Infrastructure.ServiceClients.ProductApi
                     tags: new ActivityTagsCollection
                     {
                         { "product.id", id.ToString() },
-                        { "client.name", "ProductApi" },
+                        { "class.name", nameof(ProductApi) },
                         { "request.url", $"{_productApiUrl}/api/product/{id}" },
                         { "timestamp", DateTime.UtcNow.ToString("o") }
                     }

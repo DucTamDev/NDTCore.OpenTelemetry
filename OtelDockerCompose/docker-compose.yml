@@ -95,8 +95,22 @@ services:
     networks:
       - elk
     restart: always
+  
+  # MSSQL Server
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: mssql
+    restart: always
+    ports:
+      - "5434:1433"
+    environment:
+      SA_PASSWORD: "@Changeme"
+      ACCEPT_EULA: "Y"
+    volumes:
+      - mssql:/var/opt/mssql
 
 volumes:
   grafana:
   loki:
   prometheus:
+  mssql:

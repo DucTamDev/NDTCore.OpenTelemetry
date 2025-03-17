@@ -17,6 +17,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\NDTCore.OpenTelemetry.Application\NDTCore.OpenTelemetry.Application.csproj" />
 		<ProjectReference Include="..\NDTCore.OpenTelemetry.Contact\NDTCore.OpenTelemetry.Contact.csproj" />
+		<ProjectReference Include="..\NDTCore.OpenTelemetry.Domain\NDTCore.OpenTelemetry.Domain.csproj" />
 		<ProjectReference Include="..\NDTCore.OpenTelemetry.Infrastructure\NDTCore.OpenTelemetry.Infrastructure.csproj" />
 	</ItemGroup>
 

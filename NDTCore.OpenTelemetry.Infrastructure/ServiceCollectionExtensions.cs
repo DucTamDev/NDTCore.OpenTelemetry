@@ -41,7 +41,7 @@ namespace NDTCore.OpenTelemetry.Infrastructure
 
             services.AddDbContext<ApplicationDbContext>(options =>
             {
-                options.UseSqlite(connectionString, sqlOptions =>
+                options.UseSqlServer(connectionString, sqlOptions =>
                 {
                     sqlOptions.MigrationsAssembly(migrationsAssembly);
                 });
