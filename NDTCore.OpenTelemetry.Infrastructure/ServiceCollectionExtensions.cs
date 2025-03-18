@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using NDTCore.OpenTelemetry.Contact.Instrumentations;
 using NDTCore.OpenTelemetry.Contact.Interfaces.ServiceClients.Product;
 using NDTCore.OpenTelemetry.Domain.Constants;
 using NDTCore.OpenTelemetry.Domain.Repositories;
@@ -28,6 +29,8 @@ namespace NDTCore.OpenTelemetry.Infrastructure
             services.AddHttpClient();
             services.AddScoped<IProductApi, ProductApi>();
 
+            services.AddSingleton<Instrumentation>();
+
             return services;
         }
 
@@ -41,6 +44,7 @@ namespace NDTCore.OpenTelemetry.Infrastructure
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped<IProductRepository, ProductRepository>();
 
+            services.AddSingleton<Instrumentation>();
             return services;
         }
 
@@ -66,16 +70,16 @@ namespace NDTCore.OpenTelemetry.Infrastructure
                             .CreateDefault()
                             .AddContainerDetector()
                             .AddHostDetector()
-                            .AddService(OtelConstants.APP_OTEL_RESOURCE_SERVICE_NAME,
-                                        OtelConstants.APP_OTEL_RESOURCE_SERVICE_NAME,
-                                        OtelConstants.APP_OTEL_RESOURCE_SERVICE_VERSION);
+                            .AddService(AppTelemetry.APP_OTEL_RESOURCE_SERVICE_NAME,
+                                        AppTelemetry.APP_OTEL_RESOURCE_SERVICE_NAME,
+                                        AppTelemetry.APP_OTEL_RESOURCE_SERVICE_VERSION);
 
             var endpointExporter = configuration.GetValue<string>("OtelExporter:Endpoint");
 
             var exporter = new OtlpExporterOptions
             {
                 Endpoint = new Uri(string.IsNullOrEmpty(endpointExporter)
-                                ? OtelConstants.OTEL_EXPORTER_OTLP_GRPC_ENDPOINT
+                                ? AppTelemetry.OTEL_EXPORTER_OTLP_GRPC_ENDPOINT
                                 : endpointExporter),
                 Protocol = OtlpExportProtocol.Grpc
             };
@@ -96,7 +100,7 @@ namespace NDTCore.OpenTelemetry.Infrastructure
             services.AddOpenTelemetry()
                     .WithTracing(tracerBuilder => tracerBuilder
                         .SetResourceBuilder(resource)
-                        .AddSource(OtelConstants.APP_OTEL_RESOURCE_SERVICE_NAME)
+                        .AddSource(AppTelemetry.APP_OTEL_RESOURCE_SERVICE_NAME)
                         .AddAspNetCoreInstrumentation()
                         .AddHttpClientInstrumentation()
                         .AddSqlClientInstrumentation(options =>
@@ -116,7 +120,7 @@ namespace NDTCore.OpenTelemetry.Infrastructure
             services.AddOpenTelemetry()
                     .WithMetrics(metricBuilder => metricBuilder
                         .SetResourceBuilder(resource)
-                        .AddMeter(OtelConstants.APP_OTEL_RESOURCE_SERVICE_NAME)
+                        .AddMeter(AppTelemetry.APP_OTEL_RESOURCE_SERVICE_NAME)
                         .AddAspNetCoreInstrumentation()
                         .AddHttpClientInstrumentation()
                         .AddRuntimeInstrumentation()

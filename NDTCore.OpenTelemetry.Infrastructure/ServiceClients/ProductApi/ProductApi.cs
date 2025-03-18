@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
+using NDTCore.OpenTelemetry.Contact.Instrumentations;
 using NDTCore.OpenTelemetry.Contact.Interfaces.ServiceClients.Product;
 using NDTCore.OpenTelemetry.Contact.Interfaces.ServiceClients.Product.Dtos;
-using NDTCore.OpenTelemetry.Domain.Constants;
 using System.Diagnostics;
 using System.Text.Json;
 
@@ -12,21 +12,22 @@ namespace NDTCore.OpenTelemetry.Infrastructure.ServiceClients.ProductApi
         private readonly ILogger<ProductApi> _logger;
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly JsonSerializerOptions _options;
-
+        private readonly Instrumentation _instrumentation;
         private const string _productApiUrl = "https://localhost:44340";
 
-        public ProductApi(IHttpClientFactory httpClientFactory, ILogger<ProductApi> logger)
+        public ProductApi(ILogger<ProductApi> logger, IHttpClientFactory httpClientFactory, Instrumentation instrumentation)
         {
             _logger = logger;
             _httpClientFactory = httpClientFactory;
             _options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            _instrumentation = instrumentation;
         }
 
         public async Task<IList<ProductDto>> GetAllProductAsync()
         {
             _logger.LogInformation("[ProductApi] Fetching all products from {Url}", _productApiUrl);
 
-            using (Activity? activity = OtelConstants.ActivitySource.StartActivity(typeof(ProductApi).FullName ?? nameof(ProductApi)))
+            using (Activity? activity = _instrumentation.Tracing.ActivitySource.StartActivity(typeof(ProductApi).FullName ?? nameof(ProductApi)))
             {
                 activity?.SetTag("class.name", nameof(ProductApi));
                 activity?.SetTag("class.method", nameof(GetAllProductAsync));
@@ -69,7 +70,7 @@ namespace NDTCore.OpenTelemetry.Infrastructure.ServiceClients.ProductApi
         {
             _logger.LogInformation("[ProductApi] Fetching product by ID: {ProductId}", id);
 
-            using (Activity? activity = OtelConstants.ActivitySource.StartActivity(typeof(ProductApi).FullName ?? nameof(ProductApi)))
+            using (Activity? activity = _instrumentation.Tracing.ActivitySource.StartActivity(typeof(ProductApi).FullName ?? nameof(ProductApi)))
             {
                 activity?.SetTag("class.name", nameof(ProductApi));
                 activity?.SetTag("class.method", nameof(GetProductByIdAsync));
