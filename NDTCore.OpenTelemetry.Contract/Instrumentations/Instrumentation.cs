@@ -1,4 +1,4 @@
-﻿namespace NDTCore.OpenTelemetry.Contact.Instrumentations
+﻿namespace NDTCore.OpenTelemetry.Contract.Instrumentations
 {
     public class Instrumentation : IDisposable
     {
@@ -19,8 +19,8 @@
 
         protected virtual void Dispose(bool disposing)
         {
-            Tracing.ActivitySource.Dispose();
-            Metrics.Meter.Dispose();
+            Tracing.GetActivitySource().Dispose();
+            Metrics.GetMeter().Dispose();
         }
 
         ~Instrumentation()

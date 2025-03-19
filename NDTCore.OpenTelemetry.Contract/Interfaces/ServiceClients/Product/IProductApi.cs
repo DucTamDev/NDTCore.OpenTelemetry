@@ -1,6 +1,6 @@
-﻿using NDTCore.OpenTelemetry.Contact.Interfaces.ServiceClients.Product.Dtos;
+﻿using NDTCore.OpenTelemetry.Contract.Interfaces.ServiceClients.Product.Dtos;
 
-namespace NDTCore.OpenTelemetry.Contact.Interfaces.ServiceClients.Product
+namespace NDTCore.OpenTelemetry.Contract.Interfaces.ServiceClients.Product
 {
     public interface IProductApi
     {

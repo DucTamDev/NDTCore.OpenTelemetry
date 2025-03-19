@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\NDTCore.OpenTelemetry.Contact\NDTCore.OpenTelemetry.Contact.csproj" />
+    <ProjectReference Include="..\NDTCore.OpenTelemetry.Contract\NDTCore.OpenTelemetry.Contract.csproj" />
     <ProjectReference Include="..\NDTCore.OpenTelemetry.Domain\NDTCore.OpenTelemetry.Domain.csproj" />
   </ItemGroup>
 

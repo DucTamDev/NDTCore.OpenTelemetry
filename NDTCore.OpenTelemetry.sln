@@ -11,9 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NDTCore.OpenTelemetry.Appli
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NDTCore.OpenTelemetry.Infrastructure", "NDTCore.OpenTelemetry.Infrastructure\NDTCore.OpenTelemetry.Infrastructure.csproj", "{74ED34A7-EBA8-45F2-9776-FE3E0A35956F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NDTCore.OpenTelemetry.Contact", "NDTCore.OpenTelemetry.Contact\NDTCore.OpenTelemetry.Contact.csproj", "{4D4F0D1A-0F75-48AF-B531-32D5940429FF}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NDTCore.OpenTelemetry.Product", "NDTCore.OpenTelemetry.Product\NDTCore.OpenTelemetry.Product.csproj", "{8BB97431-23D9-4660-91EC-EFD8EBD43741}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NDTCore.OpenTelemetry.Contract", "NDTCore.OpenTelemetry.Contract\NDTCore.OpenTelemetry.Contract.csproj", "{D447435A-6ECF-4E85-B224-FB70B5352BF3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,14 +37,14 @@ Global
 		{74ED34A7-EBA8-45F2-9776-FE3E0A35956F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{74ED34A7-EBA8-45F2-9776-FE3E0A35956F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{74ED34A7-EBA8-45F2-9776-FE3E0A35956F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4D4F0D1A-0F75-48AF-B531-32D5940429FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4D4F0D1A-0F75-48AF-B531-32D5940429FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4D4F0D1A-0F75-48AF-B531-32D5940429FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4D4F0D1A-0F75-48AF-B531-32D5940429FF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8BB97431-23D9-4660-91EC-EFD8EBD43741}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8BB97431-23D9-4660-91EC-EFD8EBD43741}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8BB97431-23D9-4660-91EC-EFD8EBD43741}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8BB97431-23D9-4660-91EC-EFD8EBD43741}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D447435A-6ECF-4E85-B224-FB70B5352BF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D447435A-6ECF-4E85-B224-FB70B5352BF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D447435A-6ECF-4E85-B224-FB70B5352BF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D447435A-6ECF-4E85-B224-FB70B5352BF3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

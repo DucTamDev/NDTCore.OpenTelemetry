@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using NDTCore.OpenTelemetry.Contact.Interfaces.ServiceClients.Product.Dtos;
+using NDTCore.OpenTelemetry.Contract.Interfaces.ServiceClients.Product.Dtos;
 using NDTCore.OpenTelemetry.Domain.Repositories;
 
 namespace NDTCore.OpenTelemetry.Product.Controllers

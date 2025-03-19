@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using NDTCore.OpenTelemetry.Contact.Interfaces.ServiceClients.Product.Dtos;
+using NDTCore.OpenTelemetry.Contract.Interfaces.ServiceClients.Product.Dtos;
 using NDTCore.OpenTelemetry.Domain.Entities;
 
-namespace NDTCore.OpenTelemetry.Contact
+namespace NDTCore.OpenTelemetry.Contract
 {
     public class MappingProfile : Profile
     {

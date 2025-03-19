@@ -1,4 +1,4 @@
-﻿namespace NDTCore.OpenTelemetry.Contact.Interfaces.ServiceClients.Product.Dtos
+﻿namespace NDTCore.OpenTelemetry.Contract.Interfaces.ServiceClients.Product.Dtos
 {
     public class ProductDto
     {

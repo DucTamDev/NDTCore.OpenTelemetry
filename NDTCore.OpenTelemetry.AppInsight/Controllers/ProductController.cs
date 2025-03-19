@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using NDTCore.OpenTelemetry.Contact.Instrumentations;
-using NDTCore.OpenTelemetry.Contact.Interfaces.ServiceClients.Product;
-using NDTCore.OpenTelemetry.Contact.Interfaces.ServiceClients.Product.Dtos;
-using NDTCore.OpenTelemetry.Infrastructure.ServiceClients.ProductApi;
+using NDTCore.OpenTelemetry.Contract.Instrumentations;
+using NDTCore.OpenTelemetry.Contract.Interfaces.ServiceClients.Product;
+using NDTCore.OpenTelemetry.Contract.Interfaces.ServiceClients.Product.Dtos;
 using System.Diagnostics;
 
 namespace NDTCore.OpenTelemetry.AppInsight.Controllers
@@ -23,10 +22,10 @@ namespace NDTCore.OpenTelemetry.AppInsight.Controllers
         [HttpGet("GetAllProduct")]
         public async Task<IList<ProductDto>> GetProductAllAsync()
         {
-            using Activity? activity = _instrumentation.Tracing.StartActivity(typeof(ProductController), nameof(GetProductAllAsync));
-            var startTime = DateTime.UtcNow;
+            var stopwatch = Stopwatch.StartNew();
 
-            _instrumentation.Metrics.IncrementRequestCount("/GetAllProduct");
+            using Activity? activity = _instrumentation.Tracing.StartActivity(typeof(ProductController), nameof(GetProductAllAsync));
+            _instrumentation.Metrics.RecordFunctionCall(nameof(GetProductAllAsync));
 
             try
             {
@@ -44,23 +43,26 @@ namespace NDTCore.OpenTelemetry.AppInsight.Controllers
             }
             finally
             {
-                var duration = (DateTime.UtcNow - startTime).TotalMilliseconds;
-                _instrumentation.Metrics.RecordRequestDuration("/GetAllProduct", duration);
-                _instrumentation.Tracing.LogCompletion(activity, startTime, "Fetching all products - Completed");
+                stopwatch.Stop();
+                var duration = stopwatch.Elapsed.TotalMilliseconds;
+
+                _instrumentation.Metrics.RecordExecutionTime(nameof(GetProductAllAsync), duration);
+                _instrumentation.Tracing.LogCompletion(activity, duration, "Fetching all products - Completed");
             }
         }
 
         [HttpGet("GetProductById/{id}")]
         public async Task<ProductDto?> GetProductByIdAsync(int id)
         {
-            using Activity? activity = _instrumentation.Tracing.StartActivity(typeof(ProductController), nameof(GetProductByIdAsync), new Dictionary<string, object>
-        {
-            { "product.id", id },
-            { "product.type", "integer" }
-        });
-            var startTime = DateTime.UtcNow;
+            var stopwatch = Stopwatch.StartNew();
 
-            _instrumentation.Metrics.IncrementRequestCount("/GetProductById");
+            using Activity? activity = _instrumentation.Tracing.StartActivity(typeof(ProductController), nameof(GetProductByIdAsync), new Dictionary<string, object>
+            {
+                { "product.id", id },
+                { "product.type", "integer" }
+            });
+
+            _instrumentation.Metrics.RecordFunctionCall(nameof(GetProductByIdAsync));
 
             try
             {
@@ -78,9 +80,11 @@ namespace NDTCore.OpenTelemetry.AppInsight.Controllers
             }
             finally
             {
-                var duration = (DateTime.UtcNow - startTime).TotalMilliseconds;
-                _instrumentation.Metrics.RecordRequestDuration("/GetProductById", duration);
-                _instrumentation.Tracing.LogCompletion(activity, startTime, $"Fetching product by ID: {id} - Completed");
+                stopwatch.Stop();
+                var duration = stopwatch.Elapsed.TotalMilliseconds;
+
+                _instrumentation.Metrics.RecordExecutionTime(nameof(GetProductByIdAsync), duration);
+                _instrumentation.Tracing.LogCompletion(activity, duration, $"Fetching product by ID: {id} - Completed");
             }
         }
     }

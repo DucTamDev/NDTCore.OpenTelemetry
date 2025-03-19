@@ -1,7 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
-using NDTCore.OpenTelemetry.Contact.Instrumentations;
-using NDTCore.OpenTelemetry.Contact.Interfaces.ServiceClients.Product;
-using NDTCore.OpenTelemetry.Contact.Interfaces.ServiceClients.Product.Dtos;
+using Microsoft.Extensions.Options;
+using NDTCore.OpenTelemetry.Contract.ConfigutionSettings;
+using NDTCore.OpenTelemetry.Contract.Instrumentations;
+using NDTCore.OpenTelemetry.Contract.Interfaces.ServiceClients.Product;
+using NDTCore.OpenTelemetry.Contract.Interfaces.ServiceClients.Product.Dtos;
 using System.Diagnostics;
 using System.Text.Json;
 
@@ -13,25 +15,28 @@ namespace NDTCore.OpenTelemetry.Infrastructure.ServiceClients.ProductApi
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly JsonSerializerOptions _options;
         private readonly Instrumentation _instrumentation;
-        private const string _productApiUrl = "https://localhost:44340";
-
-        public ProductApi(ILogger<ProductApi> logger, IHttpClientFactory httpClientFactory, Instrumentation instrumentation)
+        private readonly ProductApiSettings _productApiSettings;
+        public ProductApi(ILogger<ProductApi> logger,
+            IHttpClientFactory httpClientFactory,
+            Instrumentation instrumentation,
+            IOptions<ProductApiSettings> productApiSetting)
         {
             _logger = logger;
             _httpClientFactory = httpClientFactory;
             _options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
             _instrumentation = instrumentation;
+            _productApiSettings = productApiSetting.Value;
         }
 
         public async Task<IList<ProductDto>> GetAllProductAsync()
         {
-            _logger.LogInformation("[ProductApi] Fetching all products from {Url}", _productApiUrl);
+            _logger.LogInformation("[ProductApi] Fetching all products from {Url}", _productApiSettings.BaseUrl);
 
-            using (Activity? activity = _instrumentation.Tracing.ActivitySource.StartActivity(typeof(ProductApi).FullName ?? nameof(ProductApi)))
+            using (Activity? activity = _instrumentation.Tracing.StartActivity(typeof(ProductApi), nameof(GetAllProductAsync)))
             {
                 activity?.SetTag("class.name", nameof(ProductApi));
                 activity?.SetTag("class.method", nameof(GetAllProductAsync));
-                activity?.SetTag("request.endpoint", $"{_productApiUrl}/api/product/all");
+                activity?.SetTag("request.endpoint", $"{_productApiSettings.BaseUrl}/api/product/all");
 
                 activity?.AddBaggage("user.userId", "0012");
                 activity?.AddBaggage("proxy.ip", "192.168.1.100");
@@ -41,7 +46,7 @@ namespace NDTCore.OpenTelemetry.Infrastructure.ServiceClients.ProductApi
                 try
                 {
                     var httpClient = _httpClientFactory.CreateClient();
-                    using var response = await httpClient.GetAsync($"{_productApiUrl}/api/product/all", HttpCompletionOption.ResponseHeadersRead);
+                    using var response = await httpClient.GetAsync($"{_productApiSettings.BaseUrl}/api/product/all", HttpCompletionOption.ResponseHeadersRead);
                     response.EnsureSuccessStatusCode();
 
                     var stream = await response.Content.ReadAsStreamAsync();
@@ -59,8 +64,9 @@ namespace NDTCore.OpenTelemetry.Infrastructure.ServiceClients.ProductApi
                         tags: new ActivityTagsCollection { { "error.message", ex.Message } }
                     ));
 
-                    _logger.LogError(ex, "[ProductApi] Error fetching products from {Url}", _productApiUrl);
-                    throw;
+                    _logger.LogError(ex, "[ProductApi] Error fetching products from {Url}", _productApiSettings.BaseUrl);
+
+                    return new List<ProductDto>();
                 }
             }
         }
@@ -70,11 +76,11 @@ namespace NDTCore.OpenTelemetry.Infrastructure.ServiceClients.ProductApi
         {
             _logger.LogInformation("[ProductApi] Fetching product by ID: {ProductId}", id);
 
-            using (Activity? activity = _instrumentation.Tracing.ActivitySource.StartActivity(typeof(ProductApi).FullName ?? nameof(ProductApi)))
+            using (Activity? activity = _instrumentation.Tracing.StartActivity(typeof(ProductApi), nameof(GetProductByIdAsync)))
             {
                 activity?.SetTag("class.name", nameof(ProductApi));
                 activity?.SetTag("class.method", nameof(GetProductByIdAsync));
-                activity?.SetTag("request.endpoint", $"{_productApiUrl}/api/product/{id}");
+                activity?.SetTag("request.endpoint", $"{_productApiSettings.BaseUrl}/api/product/{id}");
                 activity?.AddBaggage("user.userId", "0012");
 
                 activity?.AddEvent(new ActivityEvent("Fetching product by ID",
@@ -82,7 +88,7 @@ namespace NDTCore.OpenTelemetry.Infrastructure.ServiceClients.ProductApi
                     {
                         { "product.id", id.ToString() },
                         { "class.name", nameof(ProductApi) },
-                        { "request.url", $"{_productApiUrl}/api/product/{id}" },
+                        { "request.url", $"{_productApiSettings.BaseUrl}/api/product/{id}" },
                         { "timestamp", DateTime.UtcNow.ToString("o") }
                     }
                 ));
@@ -90,7 +96,7 @@ namespace NDTCore.OpenTelemetry.Infrastructure.ServiceClients.ProductApi
                 try
                 {
                     var httpClient = _httpClientFactory.CreateClient();
-                    using var response = await httpClient.GetAsync($"{_productApiUrl}/api/product/{id}", HttpCompletionOption.ResponseHeadersRead);
+                    using var response = await httpClient.GetAsync($"{_productApiSettings.BaseUrl}/api/product/{id}", HttpCompletionOption.ResponseHeadersRead);
 
                     if (!response.IsSuccessStatusCode)
                     {
@@ -113,7 +119,8 @@ namespace NDTCore.OpenTelemetry.Infrastructure.ServiceClients.ProductApi
                     ));
 
                     _logger.LogError(ex, "[ProductApi] Error fetching product {ProductId}", id);
-                    throw;
+
+                    return null;
                 }
             }
         }

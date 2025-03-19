@@ -2,8 +2,9 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using NDTCore.OpenTelemetry.Contact.Instrumentations;
-using NDTCore.OpenTelemetry.Contact.Interfaces.ServiceClients.Product;
+using NDTCore.OpenTelemetry.Contract.ConfigutionSettings;
+using NDTCore.OpenTelemetry.Contract.Instrumentations;
+using NDTCore.OpenTelemetry.Contract.Interfaces.ServiceClients.Product;
 using NDTCore.OpenTelemetry.Domain.Constants;
 using NDTCore.OpenTelemetry.Domain.Repositories;
 using NDTCore.OpenTelemetry.Infrastructure.Persistences;
@@ -22,7 +23,11 @@ namespace NDTCore.OpenTelemetry.Infrastructure
     {
         public static IServiceCollection AddInfrastructureConfigureServicesForAppInsight(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddAutoMapper(Assembly.Load("NDTCore.OpenTelemetry.Contact"));
+            services.AddOptions();
+            services.Configure<OpenTelemetrySettings>(configuration.GetSection(nameof(OpenTelemetrySettings)));
+            services.Configure<ProductApiSettings>(configuration.GetSection(nameof(ProductApiSettings)));
+
+            services.AddAutoMapper(Assembly.Load("NDTCore.OpenTelemetry.Contract"));
 
             services.AddStackOpenTelemetry(configuration);
 
@@ -36,7 +41,10 @@ namespace NDTCore.OpenTelemetry.Infrastructure
 
         public static IServiceCollection AddInfrastructureConfigureServicesForProduct(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddAutoMapper(Assembly.Load("NDTCore.OpenTelemetry.Contact"));
+            services.AddOptions();
+            services.Configure<OpenTelemetrySettings>(configuration.GetSection(nameof(OpenTelemetrySettings)));
+
+            services.AddAutoMapper(Assembly.Load("NDTCore.OpenTelemetry.Contract"));
 
             services.AddStackOpenTelemetry(configuration);
             services.AddStackDatabase(configuration);
@@ -74,14 +82,14 @@ namespace NDTCore.OpenTelemetry.Infrastructure
                                         AppTelemetry.APP_OTEL_RESOURCE_SERVICE_NAME,
                                         AppTelemetry.APP_OTEL_RESOURCE_SERVICE_VERSION);
 
-            var endpointExporter = configuration.GetValue<string>("OtelExporter:Endpoint");
+            var openTelemetryOptions = configuration
+                .GetSection(nameof(OpenTelemetrySettings))
+                .Get<OpenTelemetrySettings>() ?? new OpenTelemetrySettings();
 
             var exporter = new OtlpExporterOptions
             {
-                Endpoint = new Uri(string.IsNullOrEmpty(endpointExporter)
-                                ? AppTelemetry.OTEL_EXPORTER_OTLP_GRPC_ENDPOINT
-                                : endpointExporter),
-                Protocol = OtlpExportProtocol.Grpc
+                Endpoint = new Uri(openTelemetryOptions.GetActiveEndpoint()),
+                Protocol = openTelemetryOptions.OtlpProtocol
             };
 
             services.AddLogging(logging => logging
