@@ -1,6 +1,0 @@
-include:
-  - src/network/networks.yml
-  - src/elk/docker-compose-elk.yml
-  - src/jaeger/docker-compose-jaeger-v1.yml
-  - src/kafka/docker-compose-kafka.yml
-  - docker-compose.yml
